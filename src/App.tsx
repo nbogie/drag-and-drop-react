@@ -1,26 +1,39 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import "./App.css";
+import { generateRandomPostIts, IPostIt, Postit } from "./PostIt";
+import { randomWord, randomScreenPos, pick, randomColour } from "./random";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    const [postIts, setPostIts] = useState(() => generateRandomPostIts());
+
+    return (
+        <div
+            className="App"
+            onDragOver={(ev) => {
+                ev.preventDefault(); //NEED this
+            }}
+            onDrop={(ev) => {
+                ev.preventDefault();
+
+                const postItID = ev.dataTransfer.getData("text/plain");
+                // const draggedEl = document.getElementById(postItID);
+                // if (draggedEl === null) {
+                //     return;
+                // }
+
+                //TODO: get the upper-left corner of the draggedEl element
+                //rather than the ev.clientX, ev.clientY which is just the mouse pos.
+                const postItData = postIts[postItID];
+                const clonePostit: IPostIt = { ...postItData };
+                clonePostit.pos = { x: ev.clientX, y: ev.clientY };
+                setPostIts({ ...postIts, [clonePostit.id]: clonePostit });
+            }}
         >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+            {Object.values(postIts).map((p) => (
+                <Postit postIt={p} key={p.id} />
+            ))}
+        </div>
+    );
 }
 
 export default App;
