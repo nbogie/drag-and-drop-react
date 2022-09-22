@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import "./App.css";
 import { generateRandomPostIts, IPostIt, Postit } from "./PostIt";
-import { randomWord, randomScreenPos, pick, randomColour } from "./random";
 
 function App() {
     const [postIts, setPostIts] = useState(() => generateRandomPostIts());
